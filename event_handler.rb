@@ -6,7 +6,11 @@ class EventHandler
         def subscribe(&block) 
             return "No block given" unless block_given?
             handler = Proc.new(&block)
-            @@handlers << handler
+            unless check_if_handler_exists(handler, @@handlers)
+                @@handlers << handler
+            else
+                "Sorry, handler already exists."
+            end
         end
 
         def unsubscribe(&block)
@@ -31,6 +35,16 @@ class EventHandler
         end
 
         private
+        def check_if_handler_exists(handler, handlers)
+            handlers.each do |existing_handler|
+                if run_proc(existing_handler) == run_proc(handler)
+                    return true
+                end
+            end
+
+            return false
+        end
+
         def run_proc(handler)
             begin
                 handler.call(5)
@@ -56,9 +70,14 @@ describe EventHandler, ".subscribe" do
         expect(subscribed_events.size).to eq(1) 
     end
 
-    it "it returns single stored event handler in an array" do
+    it "it returns multiple event handlers in an array" do
         new_subscribed_events = EventHandler.subscribe {|x, y| x + 4 * 250 + y}
         expect(new_subscribed_events.size).to eq(2) 
+    end
+
+    it "it returns handler already exits" do
+        subscribed_events = EventHandler.subscribe {|x| x}
+        expect(subscribed_events).to eq("Sorry, handler already exists.")
     end
 
     it "returns No block given" do

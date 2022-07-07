@@ -10,19 +10,24 @@ class EventHandler
         end
 
         def unsubscribe(&block)
-            rem_handler = Proc.new(&block)
+            return "No block given" unless block_given?
+            remove_handler = Proc.new(&block)
              
             @@handlers.delete_if {|handler|
-                run_proc(handler) == run_proc(rem_handler)
+                run_proc(handler) == run_proc(remove_handler)
             }
 
             @@handlers
         end
 
         def broadcast(*values)
-            @@handlers.collect{|handler|
-                run_broadcast_proc(handler, values)
-            }
+            if values.size > 0
+                @@handlers.collect{|handler|
+                    run_broadcast_proc(handler, values)
+                }
+            else
+                "arguments required"
+            end
         end
 
         private
@@ -55,12 +60,22 @@ describe EventHandler, ".subscribe" do
         new_subscribed_events = EventHandler.subscribe {|x, y| x + 4 * 250 + y}
         expect(new_subscribed_events.size).to eq(2) 
     end
+
+    it "returns No block given" do
+        subscribed_event = EventHandler.subscribe
+        expect(subscribed_event).to eq("No block given")
+    end
 end
 
 describe EventHandler, ".unsubscribe" do
     it "it removes the matching block from the stored handlers" do
         subscribed_events = EventHandler.unsubscribe {|x| x}
         expect(subscribed_events.size).to eq(1) 
+    end
+
+    it "returns No block given" do
+        subscribed_events = EventHandler.unsubscribe
+        expect(subscribed_events).to eq("No block given")
     end
 end
 
@@ -73,5 +88,10 @@ describe EventHandler, ".broadcast" do
     it "it calls all the existing event handlers with arbitrary number of arguments (3, 8)" do
         broadcast_handler_02 = EventHandler.broadcast(150, 240)
         expect(broadcast_handler_02).to eq([1390])
+    end
+
+    it "it calls all the existing event handlers with no arguments ()" do
+        broadcast_handler_03 = EventHandler.broadcast()
+        expect(broadcast_handler_03).to eq("arguments required")
     end
 end

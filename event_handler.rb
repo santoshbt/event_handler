@@ -30,7 +30,7 @@ class EventHandler
                     run_broadcast_proc(handler, values)
                 }
             else
-                "arguments required"
+                "Arguments required"
             end
         end
 
@@ -49,7 +49,7 @@ class EventHandler
             begin
                 handler.call(5)
             rescue => exception
-                "invalid event"
+                "Invalid event"
             end
         end
 
@@ -57,7 +57,7 @@ class EventHandler
             begin
                 handler.call(values)
             rescue => exception
-                "invalid broadcast event"
+                "Invalid broadcast event"
             end
         end
     end
@@ -111,6 +111,11 @@ describe EventHandler, ".broadcast" do
 
     it "it calls all the existing event handlers with no arguments ()" do
         broadcast_handler_03 = EventHandler.broadcast()
-        expect(broadcast_handler_03).to eq("arguments required")
+        expect(broadcast_handler_03).to eq("Arguments required")
+    end
+
+    it "it returns invalid broadcast event" do
+        broadcast_handler_04 = EventHandler.broadcast("John")
+        expect(broadcast_handler_04).to eq(["Invalid broadcast event"])
     end
 end

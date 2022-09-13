@@ -1,5 +1,5 @@
 The process uses handling blocks via procs.
-Procs are chosen as we want blocks to be passed and stored in a variable for later usage like unsbuscribe and broadcast.
+Procs are chosen as we want blocks to be passed to method and stored in a variable for later usage like unsbuscribe and broadcast.
 Also since variable number of arguments are being passed to evaluate the blocks, procs are much suitable.
 
 Execute the event handler

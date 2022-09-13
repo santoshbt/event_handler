@@ -75,20 +75,3 @@ class EventHandler
         end
     end
 end
-
-subscribed_events = EventHandler.subscribe {|x| x}
-puts subscribed_events
-puts subscribed_events.first.call(10)   
-
-subscribed_events = EventHandler.subscribe {|x, y| x + 4 * 250 + y}
-puts subscribed_events
-puts subscribed_events[1].call(2,5)
-
-remaining_subscribed_events = EventHandler.unsubscribe {|x| x}
-puts remaining_subscribed_events
-
-broadcast_handler = EventHandler.broadcast(1,2,3,4)
-puts broadcast_handler
-
-broadcast_handler = EventHandler.broadcast(150, 240)
-puts broadcast_handler

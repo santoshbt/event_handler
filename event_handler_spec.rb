@@ -4,19 +4,15 @@ require_relative "event_handler"
 context EventHandler, ".subscribe" do
     let(:subscribed_events) {EventHandler.subscribe {|x| x}}
     it "returns single stored event handler in an array" do
-        # subscribed_events = EventHandler.subscribe {|x| x}
-        p subscribed_events
         expect(subscribed_events.size).to eq(1) 
     end
 
     it "returns multiple event handlers in an array" do
         new_subscribed_events = EventHandler.subscribe {|x, y| x + 4 * 250 + y}
-        p new_subscribed_events.inspect
         expect(new_subscribed_events.size).to eq(2) 
     end
 
     it "returns handler already exits" do
-        # subscribed_events = EventHandler.subscribe {|x| x}
         expect(subscribed_events).to eq("Sorry, handler already exists.")
     end
 
